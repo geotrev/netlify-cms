@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
 
 export default class StringControl extends React.Component {
   static propTypes = {
@@ -15,10 +14,6 @@ export default class StringControl extends React.Component {
   static defaultProps = {
     value: '',
   };
-
-  state = { value: this.props.value };
-
-  debounceOnChange = debounce(value => this.props.onChange(value), 300);
 
   // The selection to maintain for the input element
   _sel = 0;
@@ -42,13 +37,11 @@ export default class StringControl extends React.Component {
 
   handleChange = e => {
     this._sel = e.target.selectionStart;
-    const { value } = e.target;
-    this.setState({ value });
-    this.debounceOnChange(value);
+    this.props.onChange(e.target.value);
   };
 
   render() {
-    const { forID, classNameWrapper, setActiveStyle, setInactiveStyle } = this.props;
+    const { forID, value, classNameWrapper, setActiveStyle, setInactiveStyle } = this.props;
 
     return (
       <input
@@ -58,7 +51,7 @@ export default class StringControl extends React.Component {
         type="text"
         id={forID}
         className={classNameWrapper}
-        value={this.state.value || ''}
+        value={value || ''}
         onChange={this.handleChange}
         onFocus={setActiveStyle}
         onBlur={setInactiveStyle}

@@ -6,7 +6,6 @@ import reactDateTimeStyles from 'react-datetime/css/react-datetime.css';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 import { buttons } from 'netlify-cms-ui-default';
-import { debounce } from 'lodash';
 
 function NowButton({ t, handleChange }) {
   return (
@@ -44,8 +43,6 @@ export default class DateTimeControl extends React.Component {
     setInactiveStyle: PropTypes.func.isRequired,
     value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   };
-
-  state = { value: this.props.value };
 
   getFormats() {
     const { field } = this.props;
@@ -102,8 +99,6 @@ export default class DateTimeControl extends React.Component {
   isValidDate = datetime =>
     moment.isMoment(datetime) || datetime instanceof Date || datetime === '';
 
-  debounceOnChange = debounce(value => this.props.onChange(value), 300);
-
   handleChange = datetime => {
     /**
      * Set the date only if it is valid.
@@ -112,6 +107,7 @@ export default class DateTimeControl extends React.Component {
       return;
     }
 
+    const { onChange } = this.props;
     const { format } = this.formats;
 
     /**
@@ -120,12 +116,10 @@ export default class DateTimeControl extends React.Component {
      */
     if (format) {
       const formattedValue = datetime ? moment(datetime).format(format) : '';
-      this.setState({ value: formattedValue });
-      this.debounceOnChange(formattedValue);
+      onChange(formattedValue);
     } else {
       const value = moment.isMoment(datetime) ? datetime.toDate() : datetime;
-      this.setState({ value });
-      this.debounceOnChange(value);
+      onChange(value);
     }
   };
 
@@ -146,8 +140,7 @@ export default class DateTimeControl extends React.Component {
   };
 
   render() {
-    const { forID, classNameWrapper, setActiveStyle, t, isDisabled } = this.props;
-    const { value } = this.state;
+    const { forID, value, classNameWrapper, setActiveStyle, t, isDisabled } = this.props;
     const { format, dateFormat, timeFormat } = this.formats;
 
     return (

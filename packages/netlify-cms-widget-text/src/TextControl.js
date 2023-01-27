@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
-import { debounce } from 'lodash';
 
 export default class TextControl extends React.Component {
   static propTypes = {
@@ -13,11 +12,9 @@ export default class TextControl extends React.Component {
     setInactiveStyle: PropTypes.func.isRequired,
   };
 
-  static defaultProps = { value: '' };
-
-  state = { value: this.props.value };
-
-  debounceOnChange = debounce(value => this.props.onChange(value), 300);
+  static defaultProps = {
+    value: '',
+  };
 
   /**
    * Always update to ensure `react-textarea-autosize` properly calculates
@@ -30,25 +27,20 @@ export default class TextControl extends React.Component {
     return true;
   }
 
-  handleChange = e => {
-    const { value } = e.target;
-    this.setState({ value });
-    this.debounceOnChange(value);
-  };
-
   render() {
-    const { forID, classNameWrapper, setActiveStyle, setInactiveStyle } = this.props;
+    const { forID, value, onChange, classNameWrapper, setActiveStyle, setInactiveStyle } =
+      this.props;
 
     return (
       <Textarea
         id={forID}
-        value={this.state.value || ''}
+        value={value || ''}
         className={classNameWrapper}
         onFocus={setActiveStyle}
         onBlur={setInactiveStyle}
         minRows={5}
         css={{ fontFamily: 'inherit' }}
-        onChange={this.handleChange}
+        onChange={e => onChange(e.target.value)}
       />
     );
   }
