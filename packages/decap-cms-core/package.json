@@ -63,7 +63,7 @@
     "react-waypoint": "^10.0.0",
     "react-window": "^1.8.5",
     "redux": "^4.0.5",
-    "redux-devtools-extension": "^2.13.8",
+    "@redux-devtools/extension": "^3.0.0",
     "redux-notifications": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "remark-gfm": "1.0.0",
